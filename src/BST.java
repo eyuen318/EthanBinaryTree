@@ -1,3 +1,5 @@
+import jdk.nashorn.api.tree.ArrayLiteralTree;
+
 import java.util.ArrayList;
 
 /**
@@ -22,11 +24,13 @@ public class BST {
      * with some default values
      */
     public void setupTestData() {
+
         this.root = new BSTNode(10);
         this.root.setLeft(new BSTNode(5));
         this.root.setRight(new BSTNode((15)));
         this.root.getLeft().setLeft(new BSTNode(3));
         this.root.getLeft().setRight(new BSTNode(9));
+
     }
 
     /**
@@ -48,15 +52,43 @@ public class BST {
      */
     public boolean search(int val) {
         // TODO: Complete the search function
-        return false;
+        return searchHelper(root, val);
     }
+    public boolean searchHelper(BSTNode current, int val)
+    {
+        if(current == null){
+            return false; //base case
+        }
+        if(current.getVal() == val){
+            return true;
+        }
+        //check > or <
+        //recur
+        if(current.getVal() > val)
+        {
+            return searchHelper(current.getLeft(), val);
+        }
+        return searchHelper(current.getRight(), val);
+    }
+
 
     /**
      * @return ArrayList of BSTNodes in inorder
      */
     public ArrayList<BSTNode> getInorder() {
         // TODO: Complete inorder traversal
-        return null;
+        ArrayList<BSTNode> list = new ArrayList<BSTNode>();
+        getInorderHelper(root, list);
+        return list;
+    }
+    public void getInorderHelper(BSTNode current, ArrayList<BSTNode> list)
+    {
+        if(current == null){
+            return;
+        }
+        getInorderHelper(current.getLeft(), list);
+        list.add(current);
+        getInorderHelper(current.getRight(), list);
     }
 
     /**
@@ -64,7 +96,18 @@ public class BST {
      */
     public ArrayList<BSTNode> getPreorder() {
         // TODO: Complete preorder traversal
-        return null;
+        ArrayList<BSTNode> list = new ArrayList<BSTNode>();
+        getPreorderHelper(root, list);
+        return list;
+    }
+
+    public void getPreorderHelper(BSTNode current, ArrayList<BSTNode> list){
+        if(current == null){
+            return;
+        }
+        list.add(current);
+        getPreorderHelper(current.getLeft(), list);
+        getPreorderHelper(current.getRight(), list);
     }
 
     /**
@@ -72,7 +115,19 @@ public class BST {
      */
     public ArrayList<BSTNode> getPostorder() {
         // TODO: Complete postorder traversal
-        return null;
+        ArrayList<BSTNode> list = new ArrayList<BSTNode>();
+        getPostorderHelper(root, list);
+        return list;
+    }
+    public void getPostorderHelper(BSTNode current, ArrayList<BSTNode> list)
+    {
+        if(current == null)
+        {
+            return;
+        }
+        getPostorderHelper(current.getLeft(), list);
+        getPostorderHelper(current.getRight(), list);
+        list.add(current);
     }
 
     /**
@@ -83,7 +138,30 @@ public class BST {
      */
     public void insert(int val) {
         // TODO: Complete insert
+        BSTNode current = root;
+        while(current != null){
+            if(current.getVal() == val){
+                return;
+            }
+            if (current.getVal() < val)
+            {
+                if(current.getRight() == null){
+                    current.setRight(new BSTNode(val));
+                    return;
+                }
+                current = current.getRight();
+            } else {
+                if(current.getLeft() == null)
+                {
+                    current.setLeft(new BSTNode(val));
+                }
+                current = current.getLeft();
+            }
+        }
+
     }
+
+
 
     /**
      * Determines if the current BST is
@@ -92,6 +170,10 @@ public class BST {
      */
     public boolean isValidBST() {
         // TODO: Optional Challenge!
+
+        //call getInorder
+        //check if the arraylist is sorted
+
         return false;
     }
 
@@ -100,11 +182,14 @@ public class BST {
         BST tree = new BST();
         tree.setupTestData();
 
-        System.out.println("\nSearching for 15 in the tree");
-        System.out.println(tree.search(15));
+        int v1 = 15;
+        int v2 = 22;
 
-        System.out.println("\nSearching for 22 in the tree");
-        System.out.println(tree.search(22));
+        System.out.println("\nSearching for " + v1 + " in the tree");
+        System.out.println(tree.search(v1));
+
+        System.out.println("\nSearching for " + v2 + " in the tree");
+        System.out.println(tree.search(v2));
 
         System.out.println("\nPreorder traversal of binary tree is");
         ArrayList<BSTNode> sol = tree.getPreorder();
@@ -118,7 +203,9 @@ public class BST {
         sol = tree.getPostorder();
         printNodes(sol);
 
-        tree.insert(8);
+        int v3 = 0;
+        System.out.println("inserting " + v3);
+        tree.insert(v3);
         System.out.println("\nInorder traversal of binary tree is");
         sol = tree.getInorder();
         printNodes(sol);
